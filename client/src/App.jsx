@@ -24,10 +24,10 @@ function App() {
     if (token && !ws) {
       // Connect to WebSocket
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = process.env.NODE_ENV === 'development' 
-        ? 'localhost:3000' 
+      const host = process.env.NODE_ENV === 'development'
+        ? 'localhost:3000'
         : window.location.host;
-        
+
       const socket = new WebSocket(`${protocol}//${host}`);
 
       socket.onopen = () => {
@@ -73,28 +73,28 @@ function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route 
-          path="/login" 
-          element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />} 
+        <Route
+          path="/login"
+          element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
         />
-        <Route 
-          path="/register" 
-          element={!token ? <Register /> : <Navigate to="/dashboard" />} 
+        <Route
+          path="/register"
+          element={!token ? <Register onRegister={handleLogin} /> : <Navigate to="/dashboard" />}
         />
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="/dashboard"
           element={
             token ? (
-              <Dashboard 
-                user={user} 
-                token={token} 
-                ws={ws} 
-                onLogout={handleLogout} 
+              <Dashboard
+                user={user}
+                token={token}
+                ws={ws}
+                onLogout={handleLogout}
               />
             ) : (
               <Navigate to="/login" />
             )
-          } 
+          }
         />
         <Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} />} />
       </Routes>
