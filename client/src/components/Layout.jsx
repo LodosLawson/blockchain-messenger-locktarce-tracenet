@@ -4,7 +4,7 @@ import {
     LayoutDashboard,
     Wallet,
     MessageSquare,
-    Blocks,
+    Box,
     LogOut,
     Menu,
     X,
@@ -19,7 +19,7 @@ const Layout = ({ children, user, onLogout }) => {
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
         { name: 'Wallet', href: '/wallet', icon: Wallet },
         { name: 'Messages', href: '/messages', icon: MessageSquare },
-        { name: 'Explorer', href: '/explorer', icon: Blocks },
+        { name: 'Explorer', href: '/explorer', icon: Box },
     ];
 
     const isActive = (path) => location.pathname === path;
@@ -44,7 +44,7 @@ const Layout = ({ children, user, onLogout }) => {
                     <div className="flex items-center justify-between p-6 border-b">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                <Blocks className="w-6 h-6 text-white" />
+                                <Box className="w-6 h-6 text-white" />
                             </div>
                             <div>
                                 <h1 className="text-xl font-bold text-gray-900">Blockchain</h1>
