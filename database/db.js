@@ -1,5 +1,42 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure data directory exists
+const dataDir = process.env.NODE_ENV === 'production'
+  ? '/tmp/data'
+  : path.join(__dirname, '../data');
+
+const dbPath = path.join(dataDir, 'users.json');
+
+export const initializeDB = () => {
+  try {
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    // Initialize database file
+    if (!fs.existsSync(dbPath)) {
+      fs.writeFileSync(dbPath, JSON.stringify({ users: [], nextId: 1 }));
+    }
+    console.log('✅ Database initialized at:', dbPath);
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    throw error;
+  }
+};
+
+const readDB = () => {
+  if (!fs.existsSync(dbPath)) {
+    return { users: [], nextId: 1 };
+  }
+  const data = fs.readFileSync(dbPath, 'utf8');
+  return JSON.parse(data);
+};
+
 const writeDB = (data) => {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 };
@@ -52,4 +89,4 @@ export const searchUsers = (query) => {
     }));
 };
 
-export default { createUser, getUserByUsername, getUserById, getAllUsers, searchUsers };
+export default { initializeDB, createUser, getUserByUsername, getUserById, getAllUsers, searchUsers };
