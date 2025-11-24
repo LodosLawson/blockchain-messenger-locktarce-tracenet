@@ -32,7 +32,17 @@ function PriceChart({ token }) {
                 })
             ]);
 
-            setStats(statsRes.data);
+            const marketStats = statsRes.data;
+            // Hardcode Market Cap to $1000
+            marketStats.marketCap = 1000;
+            // Recalculate price based on fixed market cap
+            if (marketStats.circulatingSupply > 0) {
+                marketStats.currentPrice = 1000 / marketStats.circulatingSupply;
+            } else {
+                marketStats.currentPrice = 0;
+            }
+
+            setStats(marketStats);
             setPriceHistory(historyRes.data.history || []);
             setLoading(false);
         } catch (error) {
@@ -140,7 +150,7 @@ function PriceChart({ token }) {
 
             <div className="price-info">
                 <p className="text-xs text-muted">
-                    💡 Price is calculated from $1,000 market cap divided by circulating supply
+                    💡 Price is calculated from fixed $1,000 market cap divided by circulating supply
                 </p>
             </div>
         </div>

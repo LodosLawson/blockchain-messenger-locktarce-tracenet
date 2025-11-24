@@ -2,7 +2,7 @@
   "name": "Blockchain Messenger",
   "short_name": "BCMessenger",
   "description": "Decentralized messaging platform with blockchain technology and cryptocurrency rewards",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#6366f1",

@@ -6,9 +6,27 @@ function WalletView({ balance, token }) {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [currentPrice, setCurrentPrice] = useState(0);
+
     useEffect(() => {
         fetchTransactions();
+        fetchPrice();
     }, []);
+
+    const fetchPrice = async () => {
+        try {
+            const response = await axios.get('/api/tokenomics/stats', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const marketStats = response.data;
+            // Calculate price based on fixed $1000 market cap
+            if (marketStats.circulatingSupply > 0) {
+                setCurrentPrice(1000 / marketStats.circulatingSupply);
+            }
+        } catch (error) {
+            console.error('Failed to fetch price:', error);
+        }
+    };
 
     const fetchTransactions = async () => {
         try {
@@ -40,6 +58,11 @@ function WalletView({ balance, token }) {
                 <div className="balance-card">
                     <p className="text-sm text-muted">Total Balance</p>
                     <h1 className="balance-amount">{balance.toFixed(2)} <span className="text-sm">LTC</span></h1>
+                    {currentPrice > 0 && (
+                        <p className="text-sm text-success mt-sm">
+                            ≈ ${(balance * currentPrice).toFixed(2)} USD
+                        </p>
+                    )}
                 </div>
             </div>
 
