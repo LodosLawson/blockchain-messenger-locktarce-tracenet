@@ -19277,6 +19277,44 @@
       "previousHash": "004d6c0f108dd760db0cb8827c36bca1c5622419c295eccc9a1f99998221b882",
       "nonce": 170,
       "hash": "008769d26d47c842aee397cd586c5a7256922ca8919aa64cc340c1ddeb38ed30"
+    },
+    {
+      "timestamp": 1764010701685,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010701453,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAsd2CxBTWvgn8khOJSKylMXAUUjUtYv8kM2KthrdMtsOpJ36UWfrb\np2QqBFJF1Fcdbn6tbEiBi7hwo0qEDw6WwU//xi9pOo+6pR1wMUByTvAkSzgz2Q4e\npDPYH929fZa4cuWtF6tJzj0GB3htD+n2skHf9JxYcYdQSDjC+UtLEzczPslFLPyM\n/Wil2Q9CcDtF/IEj2NzxM389YlbXYT0Nm5PG1kkSoIymI/42hPmGqT6drDouQujn\nIy4ClXGiXHtz3BIvg22XfqThcO3vtRU+/30FOEervdIzBrf55jUomMC+wXks8gfe\nUopdEK3wV7DNM5DRW/r4HT+XUfyVL310dQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAo2raIwhlLaSWU4ht7J3dykZJo6D28oS6SacH4ikPp2DaVmyMtESo\nw/4hC9r6wZcWzY+rVhhkaGokUW99lbwDMfhESmKUKWB3aRtYi2ZyuqPF3KwxKZD1\nDZhO7/5V10IltyB66xujr823DaHqtf23t1NNMIaewFKJLxLJl8WJY9hWA8AVbScd\nzjwuyvDXoO8N5daDaF3mLPP++wAPZrYJMudAOtKa420s6C0N9EFuA1PRAfqrIW3P\nkUnJVc3aYyO4agdETv29UXxK5XEeSwql6zBLoV+M6giZR+hl4sms5vQTW5B1jWm/\nZoT3T6/zANSERtTyQXAh+i8NA0RjZpvDiQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 1,
+          "type": "transfer",
+          "data": null,
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010701651,
+          "signature": "3b4ac1f3fa7003decc91c94c53e91a76082af8f34c1cb03dd22713a13e295a76bbfbfca6683068afb5d93a221444ab651810bd952802d0090f1efc0628497263846ba2d4519e463f61fe064978e391717ed7c9c0c51cc676fa19248418f06835dc6e686518f4184c5968bbf6a2970ffd6eb742d6e9ba88e1f35173ee85225ab291c0899284cee790ca77adf4f6f6ad9f2eb944d7f5976f0ee9341067735a0c7fa07a9a18df4aeb6ec78331bcbcbeeb815a84918263c41fb3913cf59ddcd19e5ffc047059c23fc2d258461540d41562c316a05928d2577da80981a6b196064a649bcaec23f7ac98bffef245058ce258d424965d0dbcc8b42e2701afa7c86a2f69",
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "008769d26d47c842aee397cd586c5a7256922ca8919aa64cc340c1ddeb38ed30",
+      "nonce": 76,
+      "hash": "00bfeb15f837cd3a607687f956d5743ddb56b1e1576ea3ab58d6b7202269cda7"
     }
   ],
   "difficulty": 2,
@@ -19298,11 +19336,11 @@
       "fee": 0,
       "feeDistributions": [],
       "contentHash": null,
-      "timestamp": 1764010701453,
+      "timestamp": 1764010701685,
       "signature": null,
       "validations": [],
       "validated": false
     }
   ],
-  "savedAt": "2025-11-24T18:58:21.455Z"
+  "savedAt": "2025-11-24T19:03:17.149Z"
 }
