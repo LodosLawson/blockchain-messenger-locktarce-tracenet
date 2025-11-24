@@ -15,19 +15,6 @@ import walletRoutes, { initializeWalletRouter } from './routes/wallet.js';
 import validationRoutes, { initializeValidationRouter } from './routes/validation.js';
 import tokenomicsRoutes, { initializeTokenomicsRouter } from './routes/tokenomics.js';
 import blockchainRoutes, { initializeBlockchainRouter } from './routes/blockchain.js';
-import jwt from 'jsonwebtoken';
-import { getUserById } from './database/db.js';
-import { loadBlockchain, saveBlockchain, verifyBlockchainIntegrity } from './utils/blockchainPersistence.js';
-import P2PService from './network/P2PService.js';
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = 'your-secret-key-change-in-production';
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
 // Health check endpoint for Cloud Run
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'healthy' });

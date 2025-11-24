@@ -24,13 +24,15 @@ steps:
       - '--port'
       - '3000'
       - '--memory'
-      - '512Mi'
+      - '1024Mi'
       - '--cpu'
       - '1'
       - '--max-instances'
       - '10'
       - '--set-env-vars'
       - 'NODE_ENV=production'
+      - '--timeout'
+      - '300s'
 
 images:
   - 'gcr.io/$PROJECT_ID/locktrace-coin:$COMMIT_SHA'
