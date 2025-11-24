@@ -1,31 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Ensure data directory exists
-const dataDir = process.env.NODE_ENV === 'production'
-  ? '/tmp/data'
-  : path.join(__dirname, '../data');
-
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-
-const dbPath = path.join(dataDir, 'users.json');
-
-// Initialize database file
-if (!fs.existsSync(dbPath)) {
-  fs.writeFileSync(dbPath, JSON.stringify({ users: [], nextId: 1 }));
-}
-
-const readDB = () => {
-  const data = fs.readFileSync(dbPath, 'utf8');
-  return JSON.parse(data);
-};
-
 const writeDB = (data) => {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 };

@@ -3,26 +3,6 @@ import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import Blockchain from './blockchain/Blockchain.js';
 import Transaction from './blockchain/Transaction.js';
-import ValidatorPool from './validation/ValidatorPool.js';
-import ActivityTracker from './validation/ActivityTracker.js';
-import FeeManager from './tokenomics/FeeManager.js';
-import RandomRewardDistributor from './tokenomics/RandomRewardDistributor.js';
-import MarketCapTracker from './tokenomics/MarketCapTracker.js';
-import authRoutes, { initializeAuthRouter } from './routes/auth.js';
-import userRoutes from './routes/users.js';
-import messageRoutes, { initializeMessagesRouter } from './routes/messages.js';
-import walletRoutes, { initializeWalletRouter } from './routes/wallet.js';
-import validationRoutes, { initializeValidationRouter } from './routes/validation.js';
-import tokenomicsRoutes, { initializeTokenomicsRouter } from './routes/tokenomics.js';
-import blockchainRoutes, { initializeBlockchainRouter } from './routes/blockchain.js';
-// Health check endpoint for Cloud Run
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'healthy' });
-});
-
-// Initialize blockchain and tokenomics system
-const blockchain = new Blockchain();
-
 // Initialize P2P Service
 const p2pService = new P2PService(blockchain);
 // const P2P_PORT = process.env.P2P_PORT || 6001;
@@ -242,77 +222,46 @@ initializeBlockchainRouter(blockchain, validatorPool);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/wallet', walletRoutes);
-app.use('/api/validation', validationRoutes);
-app.use('/api/tokenomics', tokenomicsRoutes);
-app.use('/api/blockchain', blockchainRoutes);
+blockchain.minePendingTransactions('SYSTEM_MINING_REWARD', validatorRewards);
 
-// P2P Routes
-app.post('/api/peers', (req, res) => {
-    const { peer } = req.body;
-    if (peer) {
-        p2pService.connectToPeers([peer]);
-        res.json({ success: true, message: `Connected to ${peer}` });
-    } else {
-        res.status(400).json({ error: 'Peer URL required' });
+// Save blockchain to disk
+saveBlockchain(blockchain);
+
+console.log(`⛏️  Block mined! Pending transactions: ${blockchain.pendingTransactions.length}`);
+
+// Update market cap tracker
+marketCapTracker.onTransaction();
+
+// Notify all clients about new block
+wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+        const balance = client.userId ? blockchain.getBalanceOfAddress(
+            getUserById(client.userId)?.publicKey
+        ) : 0;
+
+        client.send(JSON.stringify({
+            type: 'block_mined',
+            message: 'New block added to chain',
+            balance: balance,
+            blockIndex: blockchain.chain.length - 1,
+            pendingCount: blockchain.pendingTransactions.length
+        }));
     }
 });
 
-// Handle new user registration (called from auth route - legacy)
-app.post('/api/internal/register-bonus', (req, res) => {
-    const { userId, publicKey } = req.body;
-    if (userId && publicKey) {
-        pendingBonuses.set(userId, publicKey);
-        res.json({ success: true });
-    } else {
-        res.status(400).json({ error: 'Missing userId or publicKey' });
+// Broadcast blockchain update
+wss.clients.forEach(client => {
+    if (client.readyState === 1) {
+        client.send(JSON.stringify({
+            type: 'blockchain_update',
+            stats: {
+                chainLength: blockchain.chain.length,
+                pendingTransactions: blockchain.pendingTransactions.length,
+                circulatingSupply: blockchain.getCirculatingSupply()
+            }
+        }));
     }
 });
-
-// Mining interval (mine blocks every 30 seconds)
-setInterval(() => {
-    if (blockchain.pendingTransactions.length > 0) {
-        const validatorRewards = validatorPool.getValidatorRewards();
-        blockchain.minePendingTransactions('SYSTEM_MINING_REWARD', validatorRewards);
-
-        // Save blockchain to disk
-        saveBlockchain(blockchain);
-
-        console.log(`⛏️  Block mined! Pending transactions: ${blockchain.pendingTransactions.length}`);
-
-        // Update market cap tracker
-        marketCapTracker.onTransaction();
-
-        // Notify all clients about new block
-        wss.clients.forEach(client => {
-            if (client.readyState === 1) {
-                const balance = client.userId ? blockchain.getBalanceOfAddress(
-                    getUserById(client.userId)?.publicKey
-                ) : 0;
-
-                client.send(JSON.stringify({
-                    type: 'block_mined',
-                    message: 'New block added to chain',
-                    balance: balance,
-                    blockIndex: blockchain.chain.length - 1,
-                    pendingCount: blockchain.pendingTransactions.length
-                }));
-            }
-        });
-
-        // Broadcast blockchain update
-        wss.clients.forEach(client => {
-            if (client.readyState === 1) {
-                client.send(JSON.stringify({
-                    type: 'blockchain_update',
-                    stats: {
-                        chainLength: blockchain.chain.length,
-                        pendingTransactions: blockchain.pendingTransactions.length,
-                        circulatingSupply: blockchain.getCirculatingSupply()
-                    }
-                }));
-            }
-        });
     }
 }, 30000);
 

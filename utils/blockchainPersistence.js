@@ -12,8 +12,18 @@ const dataDir = process.env.NODE_ENV === 'production'
     : path.join(__dirname, '../data');
 
 if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+    try {
+        fs.mkdirSync(dataDir, { recursive: true });
+    } catch (error) {
+        console.error('❌ Failed to create data directory:', error);
+    }
 }
+
+export const initializePersistence = () => {
+    if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+    }
+};
 
 const BLOCKCHAIN_FILE = process.env.BLOCKCHAIN_FILE || path.join(dataDir, 'blockchain.json');
 
