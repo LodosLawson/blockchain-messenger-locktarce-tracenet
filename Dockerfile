@@ -34,6 +34,7 @@ COPY --from=builder /app/validation ./validation
 COPY --from=builder /app/tokenomics ./tokenomics
 COPY --from=builder /app/utils ./utils
 COPY --from=builder /app/network ./network
+COPY --from=builder /app/database ./database
 
 # Create data directories
 RUN mkdir -p data database
