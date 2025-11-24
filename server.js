@@ -1,14 +1,3 @@
-console.log('🚀 SERVER PROCESS STARTING...');
-import express from 'express';
-import cors from 'cors';
-import { WebSocketServer } from 'ws';
-import Blockchain from './blockchain/Blockchain.js';
-import Transaction from './blockchain/Transaction.js';
-// Initialize P2P Service
-const p2pService = new P2PService(blockchain);
-// const P2P_PORT = process.env.P2P_PORT || 6001;
-// try {
-//     p2pService.listen(P2P_PORT);
 // } catch (error) {
 //     console.warn(`⚠️ Failed to start P2P service on port ${P2P_PORT}:`, error.message);
 // }
