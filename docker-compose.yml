@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  locktrace-node-1:
+    build: .
+    ports:
+      - "3000:3000"
+      - "6001:6001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - P2P_PORT=6001
+    volumes:
+      - ./data:/app/data
+      - ./database:/app/database
+    restart: unless-stopped
+    networks:
+      - locktrace-network
+
+  locktrace-node-2:
+    build: .
+    ports:
+      - "3001:3000"
+      - "6002:6001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - P2P_PORT=6001
+      - PEERS=locktrace-node-1:6001
+    volumes:
+      - ./data-node2:/app/data
+      - ./database-node2:/app/database
+    depends_on:
+      - locktrace-node-1
+    restart: unless-stopped
+    networks:
+      - locktrace-network
+
+  locktrace-node-3:
+    build: .
+    ports:
+      - "3002:3000"
+      - "6003:6001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - P2P_PORT=6001
+      - PEERS=locktrace-node-1:6001,locktrace-node-2:6001
+    volumes:
+      - ./data-node3:/app/data
+      - ./database-node3:/app/database
+    depends_on:
+      - locktrace-node-1
+      - locktrace-node-2
+    restart: unless-stopped
+    networks:
+      - locktrace-network
+
+networks:
+  locktrace-network:
+    driver: bridge

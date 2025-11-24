@@ -1,0 +1,87 @@
+.validator-status {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.validator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.status-indicator {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.pulse-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.status-indicator.active .pulse-ring {
+    border: 3px solid var(--success);
+}
+
+.status-indicator.active .pulse-dot {
+    background: var(--success);
+    box-shadow: 0 0 12px var(--success);
+}
+
+.status-indicator.inactive .pulse-ring {
+    border: 3px solid var(--text-muted);
+}
+
+.status-indicator.inactive .pulse-dot {
+    background: var(--text-muted);
+}
+
+.validator-stats {
+    display: flex;
+    gap: var(--spacing-xl);
+}
+
+.stat-item {
+    text-align: right;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: var(--spacing-xs);
+}
+
+.validator-info {
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
