@@ -23,10 +23,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy from builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/client/dist ./client/dist
+# Copy package files first
 COPY --from=builder /app/package*.json ./
+
+# Install only production dependencies
+RUN npm ci --omit=dev
+
+# Copy built frontend
+COPY --from=builder /app/client/dist ./client/dist
+
+# Copy server code
 COPY --from=builder /app/server.js ./
 COPY --from=builder /app/blockchain ./blockchain
 COPY --from=builder /app/routes ./routes
@@ -36,14 +42,11 @@ COPY --from=builder /app/utils ./utils
 COPY --from=builder /app/network ./network
 COPY --from=builder /app/database ./database
 
-# Create data directories
-RUN mkdir -p data database
+# Create data directories and ensure permissions
+RUN mkdir -p data database && chmod 777 data database
 
 # Expose port
 EXPOSE 3000
-
-# Health check
-
 
 # Start application
 CMD ["node", "server.js"]
