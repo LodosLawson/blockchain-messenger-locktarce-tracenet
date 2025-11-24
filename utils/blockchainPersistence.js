@@ -6,13 +6,16 @@ import Transaction from '../blockchain/Transaction.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const BLOCKCHAIN_FILE = process.env.BLOCKCHAIN_FILE || path.join(__dirname, '../data/blockchain.json');
-
 // Ensure data directory exists
-const dataDir = path.join(__dirname, '../data');
+const dataDir = process.env.NODE_ENV === 'production'
+    ? '/tmp/data'
+    : path.join(__dirname, '../data');
+
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
+
+const BLOCKCHAIN_FILE = process.env.BLOCKCHAIN_FILE || path.join(dataDir, 'blockchain.json');
 
 export function reconstructTransaction(txData) {
     const tx = new Transaction(

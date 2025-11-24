@@ -5,13 +5,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.join(__dirname, '../data/users.json');
-
 // Ensure data directory exists
-const dataDir = path.join(__dirname, '../data');
+const dataDir = process.env.NODE_ENV === 'production'
+  ? '/tmp/data'
+  : path.join(__dirname, '../data');
+
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
+
+const dbPath = path.join(dataDir, 'users.json');
 
 // Initialize database file
 if (!fs.existsSync(dbPath)) {
