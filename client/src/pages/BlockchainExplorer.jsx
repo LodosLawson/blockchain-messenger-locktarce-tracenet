@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../api/client';
-import { Blocks, Loader2, ChevronDown, ChevronUp, Clock, Hash, Package } from 'lucide-react';
+import { Box, Loader2, ChevronDown, ChevronUp, Clock, Hash, Package } from 'lucide-react';
 
 const BlockchainExplorer = () => {
     const [blocks, setBlocks] = useState([]);
@@ -73,7 +73,7 @@ const BlockchainExplorer = () => {
                             >
                                 <div className="flex items-center space-x-4">
                                     <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                        <Blocks className="w-6 h-6 text-white" />
+                                        <Box className="w-6 h-6 text-white" />
                                     </div>
                                     <div className="text-left">
                                         <h3 className="font-bold text-gray-900">Block #{block.index}</h3>
