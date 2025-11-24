@@ -19017,6 +19017,266 @@
       "previousHash": "00be6abecfe1301fd2dda09daea856b339e8af32803ba8ce09a3aed53d4d6062",
       "nonce": 381,
       "hash": "00814f8fddd3e92c59b76258e115b018bf5f6d74091fd572e14156fd9925a326"
+    },
+    {
+      "timestamp": 1764010562120,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_MINING_REWARD",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1763971423888,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAx7Vjx7nJoCy3voUdFOxp+DpG/ZhviTJAKKBxaEMElZFUOv3WZKFN\n73rS0UAlnyIRewNkI/1ftFonMLfg7RBn0nIMCEDlwqkAgRbU9H1Pc6V35d6kJR/W\nHmKtzI6mAqIZ05L7spwJU3JPb7rcXqTimcnHgPMhqwfcIzi+lPrzjQSq7l95A6ef\nNg8HhgSnsxTuxEivX9wsESvVgIeGocl2bU870xpKbXOUCpINqSaF7wYXmIbbIxOZ\n83Clbki2iQK9Bs/jEpRejBFRDVOD9cSvhl10K/itBe5JQZPBPdxWzJNxqvyVDWIb\ne5MCJ+nHZC8FG3UnXPgpv/zNW0dvfhyPGwIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userA_1764010561772"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010562096,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "00814f8fddd3e92c59b76258e115b018bf5f6d74091fd572e14156fd9925a326",
+      "nonce": 30,
+      "hash": "00551b0de917767ba886223d4a82ce7c8eef583c478a545855ae179ee4930b99"
+    },
+    {
+      "timestamp": 1764010563159,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010562120,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAvlRIy949HmrSDzgXEdYeM5GIpeE8Uuyti/BzXBasrLOm2bpk8jmv\n4/8EtiI8PmQQxn3jiXwhy9dDTx6qEFwgwRVcZURKes2CZgGqBugioGWCzh7gcdSr\nvVL2i3l7i0xFzm518AsLmkwbcjRupmQTbSGlFSA7PAXQwgfeCnMRqEnw0NKULdjq\nd4Tb8Mn2hl19Xqg8lpPHoV2wiPKkadaXjQkeUKvthpG8Mu2z9MRhDqxVPqCgXNn4\n/hCQpc9cOc8mlH9sN3vheKTGqBsaiR/wNg+TQeZl5JjcCjv2cae91qnkQN8wYy5t\nzpOf83XgjNEisCZUDZUfMa7pK+jPE6mV8QIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userB_1764010562271"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010562615,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "00551b0de917767ba886223d4a82ce7c8eef583c478a545855ae179ee4930b99",
+      "nonce": 15,
+      "hash": "00d91afc605ae2c532d2bedc95fe64aa4397c65374bd3ef26501718819fb0c08"
+    },
+    {
+      "timestamp": 1764010632093,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010563159,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA4oJRrSyAMjTKlaiCZToT+WEm6nS64HLioM2ycSzq2FCNLZv2RKMQ\nrk6bty86GIBzB0U2RV/yG9g7DgbB4jq3fq6oQioQUqS9DPBeLTNlt8J9HnIxNs6+\ndR7XHLW2fkxcIyqziFs6ESXlEReAZNxATapJSzx02NpkAZXauezX8dzyB8vUgj/0\nNy+x1cmU0XcvKnTQWfJe9i2IQ+UzkZkj/P/9e1yqJHyNVUWRLpqFXZ45SxuNdPCQ\ngQ8gCumPz+A5xdk1und8ydrKx/RnmB7CZ9tm84rkg53Y4HOY0z9s/UE7iqnCAush\n8AxNAwwQjaIk2bqmWJvVi7v1r0Pf6mM/ywIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userA_1764010631676"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010632074,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "00d91afc605ae2c532d2bedc95fe64aa4397c65374bd3ef26501718819fb0c08",
+      "nonce": 121,
+      "hash": "00baadc081042e009873dcf1615f337772a96a263ecf322a16a32d124aa9ccf9"
+    },
+    {
+      "timestamp": 1764010632480,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010632093,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAjtwV/LC8C3dBOl0+k8HH/QT+W3najsnARg46SNub0GSqUPivcF/Q\nVCuGw6s7KvBfYd2v7YaKlc7ERlm2/Vlyq0iny7acqMYa7m58Q9ecBnuGy7UsBM5D\nktUQs4I/ufWCGFkn8C4+M4n1MJVbNRqDnoiavWySMMqnUmKwfqzQzegO0fGKVL7c\ndwXl+qc2GRulprK/txV/EV9GsseOjxgOm/MF803YsJJNtdpy89vmZNDs+bulsViK\n1s0Dq66VcTwgR0XEbVMFC/3OQdhyDpyW4rzhHFr38UHZJwY/uxV6MZ4VlS642SFO\nowMnBEFra1TB5cy6MdI1jAsw/1QcMt4TWQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userB_1764010632211"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010632427,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "00baadc081042e009873dcf1615f337772a96a263ecf322a16a32d124aa9ccf9",
+      "nonce": 333,
+      "hash": "000543c8b76d2929da27d19b6e73afff8a64772ec11e9b9b16821812d6da884b"
+    },
+    {
+      "timestamp": 1764010700660,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010632480,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA4oJRrSyAMjTKlaiCZToT+WEm6nS64HLioM2ycSzq2FCNLZv2RKMQ\nrk6bty86GIBzB0U2RV/yG9g7DgbB4jq3fq6oQioQUqS9DPBeLTNlt8J9HnIxNs6+\ndR7XHLW2fkxcIyqziFs6ESXlEReAZNxATapJSzx02NpkAZXauezX8dzyB8vUgj/0\nNy+x1cmU0XcvKnTQWfJe9i2IQ+UzkZkj/P/9e1yqJHyNVUWRLpqFXZ45SxuNdPCQ\ngQ8gCumPz+A5xdk1und8ydrKx/RnmB7CZ9tm84rkg53Y4HOY0z9s/UE7iqnCAush\n8AxNAwwQjaIk2bqmWJvVi7v1r0Pf6mM/ywIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAjtwV/LC8C3dBOl0+k8HH/QT+W3najsnARg46SNub0GSqUPivcF/Q\nVCuGw6s7KvBfYd2v7YaKlc7ERlm2/Vlyq0iny7acqMYa7m58Q9ecBnuGy7UsBM5D\nktUQs4I/ufWCGFkn8C4+M4n1MJVbNRqDnoiavWySMMqnUmKwfqzQzegO0fGKVL7c\ndwXl+qc2GRulprK/txV/EV9GsseOjxgOm/MF803YsJJNtdpy89vmZNDs+bulsViK\n1s0Dq66VcTwgR0XEbVMFC/3OQdhyDpyW4rzhHFr38UHZJwY/uxV6MZ4VlS642SFO\nowMnBEFra1TB5cy6MdI1jAsw/1QcMt4TWQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 1,
+          "type": "transfer",
+          "data": null,
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010632696,
+          "signature": "da6f0c1c9885342ab20e5d4221a61891309c91cbaa2f56e29b09940a9574671cc14645f2495ef9ca66682ed3230e1aa174e089f1d107dc42a791ccfe122467ce21512344bf23e31fe8f4ec857444fd3a694bb904871a19c4dfda2adf9c171ca721812a1aeda06064435c37edeff19e4a8b043f872bbaf989c3636b23dd47a3b0f1e395832694394bed4b66bbd6a3bc3f8cdae365f5fd67e6a2eeefbf484470095eaadfdbd4810294663712bb650f31123fb84952dd675c1bea0b9ac3284001267403d8bdfaf8ce8a0c4f72dbbc8975229613dddde9a302c279850866cac107a441505e219c5e994af62325530c1c1f190b0a466bc0324305b5f49c50b4aa298c",
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAsd2CxBTWvgn8khOJSKylMXAUUjUtYv8kM2KthrdMtsOpJ36UWfrb\np2QqBFJF1Fcdbn6tbEiBi7hwo0qEDw6WwU//xi9pOo+6pR1wMUByTvAkSzgz2Q4e\npDPYH929fZa4cuWtF6tJzj0GB3htD+n2skHf9JxYcYdQSDjC+UtLEzczPslFLPyM\n/Wil2Q9CcDtF/IEj2NzxM389YlbXYT0Nm5PG1kkSoIymI/42hPmGqT6drDouQujn\nIy4ClXGiXHtz3BIvg22XfqThcO3vtRU+/30FOEervdIzBrf55jUomMC+wXks8gfe\nUopdEK3wV7DNM5DRW/r4HT+XUfyVL310dQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userA_1764010700144"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010700495,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "000543c8b76d2929da27d19b6e73afff8a64772ec11e9b9b16821812d6da884b",
+      "nonce": 106,
+      "hash": "004d6c0f108dd760db0cb8827c36bca1c5622419c295eccc9a1f99998221b882"
+    },
+    {
+      "timestamp": 1764010701453,
+      "transactions": [
+        {
+          "fromAddress": null,
+          "toAddress": "SYSTEM_WALLET",
+          "amount": 10,
+          "type": "reward",
+          "data": {
+            "reason": "mining"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010700660,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        },
+        {
+          "fromAddress": null,
+          "toAddress": "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAo2raIwhlLaSWU4ht7J3dykZJo6D28oS6SacH4ikPp2DaVmyMtESo\nw/4hC9r6wZcWzY+rVhhkaGokUW99lbwDMfhESmKUKWB3aRtYi2ZyuqPF3KwxKZD1\nDZhO7/5V10IltyB66xujr823DaHqtf23t1NNMIaewFKJLxLJl8WJY9hWA8AVbScd\nzjwuyvDXoO8N5daDaF3mLPP++wAPZrYJMudAOtKa420s6C0N9EFuA1PRAfqrIW3P\nkUnJVc3aYyO4agdETv29UXxK5XEeSwql6zBLoV+M6giZR+hl4sms5vQTW5B1jWm/\nZoT3T6/zANSERtTyQXAh+i8NA0RjZpvDiQIDAQAB\n-----END RSA PUBLIC KEY-----\n",
+          "amount": 3,
+          "type": "reward",
+          "data": {
+            "reason": "initial_bonus",
+            "username": "userB_1764010700784"
+          },
+          "fee": 0,
+          "feeDistributions": [],
+          "contentHash": null,
+          "timestamp": 1764010701252,
+          "signature": null,
+          "validations": [],
+          "validated": false
+        }
+      ],
+      "previousHash": "004d6c0f108dd760db0cb8827c36bca1c5622419c295eccc9a1f99998221b882",
+      "nonce": 170,
+      "hash": "008769d26d47c842aee397cd586c5a7256922ca8919aa64cc340c1ddeb38ed30"
     }
   ],
   "difficulty": 2,
@@ -19029,7 +19289,7 @@
   "pendingTransactions": [
     {
       "fromAddress": null,
-      "toAddress": "SYSTEM_MINING_REWARD",
+      "toAddress": "SYSTEM_WALLET",
       "amount": 10,
       "type": "reward",
       "data": {
@@ -19038,10 +19298,11 @@
       "fee": 0,
       "feeDistributions": [],
       "contentHash": null,
-      "timestamp": 1763971423888,
+      "timestamp": 1764010701453,
       "signature": null,
       "validations": [],
       "validated": false
     }
-  ]
+  ],
+  "savedAt": "2025-11-24T18:58:21.455Z"
 }

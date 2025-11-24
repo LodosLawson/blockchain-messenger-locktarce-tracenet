@@ -29,6 +29,7 @@ import walletRouter, { initializeWalletRouter } from './routes/wallet.js';
 import validationRouter, { initializeValidationRouter } from './routes/validation.js';
 import tokenomicsRouter, { initializeTokenomicsRouter } from './routes/tokenomics.js';
 import blockchainRouter, { initializeBlockchainRouter } from './routes/blockchain.js';
+import networkRouter, { initializeNetworkRouter } from './routes/network.js';
 
 // Load environment variables
 dotenv.config();
@@ -58,8 +59,13 @@ const PORT = process.env.PORT || 3000;
 const P2P_PORT = process.env.P2P_PORT || 6001;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-// Middleware
-app.use(cors());
+// Middleware - Enhanced CORS for development
+const corsOptions = {
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static files from the React app
@@ -69,10 +75,11 @@ app.use(express.static(path.join(__dirname, 'client/dist')));
 const blockchain = new Blockchain();
 const p2pService = new P2PService(blockchain);
 
+// Hook up persistence
+blockchain.onSave = () => saveBlockchain(blockchain);
+
 // Initialize P2P Service
 try {
-    // In Cloud Run (production), we don't bind to a separate P2P port.
-    // We only start the P2P server if NOT in production or if specifically configured.
     if (process.env.NODE_ENV !== 'production') {
         p2pService.listen(P2P_PORT);
         console.log(`📡 P2P Service active on port ${P2P_PORT}`);
@@ -119,6 +126,17 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 
     // Initial save
     saveBlockchain(blockchain);
+
+    // Request P2P Consensus after short delay
+    if (process.env.NODE_ENV !== 'production') {
+        setTimeout(async () => {
+            try {
+                await p2pService.requestConsensus();
+            } catch (error) {
+                console.error('Consensus request failed:', error);
+            }
+        }, 2000);
+    }
 });
 
 // Periodic auto-save every 5 minutes
@@ -134,6 +152,9 @@ function gracefulShutdown(signal) {
 
     // Clear auto-save timer
     clearInterval(autoSaveTimer);
+
+    // Shutdown P2P
+    p2pService.shutdown();
 
     // Save blockchain
     saveBlockchain(blockchain);
@@ -179,11 +200,6 @@ wss.on('connection', (ws, req) => {
                         validatorPool.registerValidator(decoded.userId, user.publicKey);
                         randomDistributor.registerUser(decoded.userId);
                         activityTracker.trackActivity(decoded.userId, 'connected');
-
-                        // Check if user needs initial bonus (legacy check, now handled in auth.js)
-                        if (pendingBonuses.has(decoded.userId)) {
-                            pendingBonuses.delete(decoded.userId);
-                        }
                     }
 
                     ws.send(JSON.stringify({
@@ -287,6 +303,7 @@ initializeWalletRouter(blockchain);
 initializeValidationRouter(validatorPool, activityTracker);
 initializeTokenomicsRouter(feeManager, blockchain, marketCapTracker);
 initializeBlockchainRouter(blockchain, validatorPool);
+initializeNetworkRouter(p2pService);
 
 // Update market cap tracker
 marketCapTracker.onTransaction();
@@ -298,53 +315,11 @@ app.use('/api/wallet', walletRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/tokenomics', tokenomicsRouter);
 app.use('/api/blockchain', blockchainRouter);
+app.use('/api', networkRouter); // Mounts /api/peers
 
 // Health check endpoint for Cloud Run
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
-});
-
-// P2P Routes
-app.post('/api/peers', (req, res) => {
-    const { peer } = req.body;
-    if (peer) {
-        p2pService.connectToPeers([peer]);
-        res.json({ success: true, message: `Connected to ${peer}` });
-    } else {
-        res.status(400).json({ error: 'Peer URL required' });
-    }
-});
-
-app.get('/api/peers', (req, res) => {
-    res.json(p2pService.getPeers());
-});
-
-// Handle new user registration (called from auth route - legacy)
-app.post('/api/internal/register-bonus', (req, res) => {
-    const { userId, publicKey } = req.body;
-    if (userId && publicKey) {
-        pendingBonuses.set(userId, publicKey);
-        res.json({ success: true });
-    } else {
-        res.status(400).json({ error: 'Missing userId or publicKey' });
-    }
-});
-
-// Notify all clients about new block
-wss.clients.forEach(client => {
-    if (client.readyState === 1) {
-        const balance = client.userId ? blockchain.getBalanceOfAddress(
-            getUserById(client.userId)?.publicKey
-        ) : 0;
-
-        client.send(JSON.stringify({
-            type: 'block_mined',
-            message: 'New block added to chain',
-            balance: balance,
-            blockIndex: blockchain.chain.length - 1,
-            pendingCount: blockchain.pendingTransactions.length
-        }));
-    }
 });
 
 // Periodic market cap update (every 5 minutes)
