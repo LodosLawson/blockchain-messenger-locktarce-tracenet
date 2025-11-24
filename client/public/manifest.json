@@ -4,8 +4,8 @@
   "description": "Decentralized messaging platform with blockchain technology and cryptocurrency rewards",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#6366f1",
+  "background_color": "#000000",
+  "theme_color": "#3b82f6",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en-US",
@@ -74,21 +74,35 @@
       "form_factor": "narrow"
     }
   ],
-  "categories": ["social", "communication", "productivity"],
+  "categories": [
+    "social",
+    "communication",
+    "productivity"
+  ],
   "shortcuts": [
     {
       "name": "New Message",
       "short_name": "Message",
       "description": "Send a new message",
       "url": "/dashboard?view=messages",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Wallet",
       "short_name": "Wallet",
       "description": "View your wallet",
       "url": "/dashboard?view=wallet",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "related_applications": [],

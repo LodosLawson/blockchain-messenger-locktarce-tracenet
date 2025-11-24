@@ -9,12 +9,12 @@
 }
 
 .auth-card {
+    background: var(--bg-secondary);
     padding: var(--spacing-xl);
     border-radius: var(--radius-xl);
     position: relative;
     z-index: 1;
     margin: var(--spacing-md);
-}
 }
 
 .auth-header {
