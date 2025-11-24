@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import ChatWindow from '../Messaging/ChatWindow';
 import WalletView from '../Wallet/WalletView';
@@ -7,6 +6,8 @@ import ValidatorStatus from '../Validation/ValidatorStatus';
 import Feed from '../Social/Feed';
 import BlockchainMonitor from '../Blockchain/BlockchainMonitor';
 import PriceChart from '../Market/PriceChart';
+import Layout from '../Layout/Layout';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './Dashboard.css';
 
 function Dashboard({ user, token, ws, onLogout }) {
@@ -16,6 +17,8 @@ function Dashboard({ user, token, ws, onLogout }) {
     const [balance, setBalance] = useState(0);
     const [validatorStats, setValidatorStats] = useState({ validationCount: 0, totalEarned: 0 });
     const [activeView, setActiveView] = useState('messages');
+
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     useEffect(() => {
         fetchUsers();
@@ -88,14 +91,6 @@ function Dashboard({ user, token, ws, onLogout }) {
             console.error('Failed to fetch validator status:', error);
         }
     };
-
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     const handleUserSelect = (u) => {
         setSelectedUser(u);
@@ -171,159 +166,84 @@ function Dashboard({ user, token, ws, onLogout }) {
     };
 
     return (
-        <div className="dashboard-container">
-            {/* Sidebar (Desktop) */}
-            <div className="sidebar glass">
-                <div className="sidebar-header">
-                    <h2 className="sidebar-title">Blockchain Messenger</h2>
-                    <div className="user-info">
-                        <div className="user-avatar">{user.username[0].toUpperCase()}</div>
-                        <div>
-                            <p className="font-semibold">{user.username}</p>
-                            <p className="text-xs text-muted">{balance.toFixed(2)} LTC</p>
-                        </div>
-                    </div>
-                </div>
+        <Layout
+            user={user}
+            balance={balance}
+            activeView={activeView}
+            setActiveView={setActiveView}
+            onLogout={onLogout}
+        >
+            {!isMobile && (
+                <>
+                    <PriceChart token={token} />
+                    <ValidatorStatus stats={validatorStats} />
+                </>
+            )}
 
-                <div className="sidebar-nav">
-                    <button
-                        className={`nav-item ${activeView === 'messages' ? 'active' : ''}`}
-                        onClick={() => setActiveView('messages')}
-                    >
-                        <span>💬</span> Messages
-                    </button>
-                    <button
-                        className={`nav-item ${activeView === 'wallet' ? 'active' : ''}`}
-                        onClick={() => setActiveView('wallet')}
-                    >
-                        <span>💰</span> Wallet
-                    </button>
-                    <button
-                        className={`nav-item ${activeView === 'feed' ? 'active' : ''}`}
-                        onClick={() => setActiveView('feed')}
-                    >
-                        <span>📱</span> Social Feed
-                    </button>
-                    <button
-                        className={`nav-item ${activeView === 'blockchain' ? 'active' : ''}`}
-                        onClick={() => setActiveView('blockchain')}
-                    >
-                        <span>⛓️</span> Blockchain
-                    </button>
-                </div>
-
-                {activeView === 'messages' && (
-                    <div className="user-list">
-                        <div className="search-container">
-                            <input
-                                type="text"
-                                className="input"
-                                placeholder="Search users..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                        <div className="users">
-                            {filteredUsers.map(u => (
-                                <div
-                                    key={u.id}
-                                    className={`user-item ${selectedUser?.id === u.id ? 'selected' : ''}`}
-                                    onClick={() => setSelectedUser(u)}
-                                >
-                                    <div className="user-avatar">{u.username[0].toUpperCase()}</div>
-                                    <div className="user-details">
-                                        <p className="font-semibold">{u.username}</p>
-                                        <p className="text-xs text-muted">Click to message</p>
+            <div className="content-area">
+                {isMobile ? renderMobileContent() : (
+                    <>
+                        {activeView === 'messages' && (
+                            <div className="desktop-messages-container">
+                                <div className="user-list-panel">
+                                    <div className="search-container">
+                                        <input
+                                            type="text"
+                                            className="input"
+                                            placeholder="Search users..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="users">
+                                        {filteredUsers.map(u => (
+                                            <div
+                                                key={u.id}
+                                                className={`user-item ${selectedUser?.id === u.id ? 'selected' : ''}`}
+                                                onClick={() => setSelectedUser(u)}
+                                            >
+                                                <div className="user-avatar">{u.username[0].toUpperCase()}</div>
+                                                <div className="user-details">
+                                                    <p className="font-semibold">{u.username}</p>
+                                                    <p className="text-xs text-muted">Click to message</p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
+                                <div className="chat-panel">
+                                    {selectedUser ? (
+                                        <ChatWindow
+                                            currentUser={user}
+                                            otherUser={selectedUser}
+                                            token={token}
+                                            ws={ws}
+                                        />
+                                    ) : (
+                                        <div className="empty-state">
+                                            <h3>Select a user to start messaging</h3>
+                                            <p className="text-muted">Choose someone from the list to begin a conversation</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
-                <button className="btn btn-secondary w-full mt-lg" onClick={onLogout}>
-                    Logout
-                </button>
-            </div>
+                        {activeView === 'wallet' && (
+                            <WalletView balance={balance} token={token} />
+                        )}
 
-            {/* Main Content */}
-            <div className="main-content">
-                {!isMobile && (
-                    <>
-                        <PriceChart token={token} />
-                        <ValidatorStatus stats={validatorStats} />
+                        {activeView === 'feed' && (
+                            <Feed token={token} ws={ws} />
+                        )}
+
+                        {activeView === 'blockchain' && (
+                            <BlockchainMonitor token={token} ws={ws} />
+                        )}
                     </>
                 )}
-
-                <div className="content-area">
-                    {isMobile ? renderMobileContent() : (
-                        <>
-                            {activeView === 'messages' && (
-                                selectedUser ? (
-                                    <ChatWindow
-                                        currentUser={user}
-                                        otherUser={selectedUser}
-                                        token={token}
-                                        ws={ws}
-                                    />
-                                ) : (
-                                    <div className="empty-state">
-                                        <h3>Select a user to start messaging</h3>
-                                        <p className="text-muted">Choose someone from the list to begin a conversation</p>
-                                    </div>
-                                )
-                            )}
-
-                            {activeView === 'wallet' && (
-                                <WalletView balance={balance} token={token} />
-                            )}
-
-                            {activeView === 'feed' && (
-                                <Feed token={token} ws={ws} />
-                            )}
-
-                            {activeView === 'blockchain' && (
-                                <BlockchainMonitor token={token} ws={ws} />
-                            )}
-                        </>
-                    )}
-                </div>
             </div>
-
-            {/* Bottom Navigation (Mobile) */}
-            {isMobile && (
-                <div className="bottom-nav">
-                    <button
-                        className={`bottom-nav-item ${activeView === 'messages' ? 'active' : ''}`}
-                        onClick={() => setActiveView('messages')}
-                    >
-                        <span>💬</span>
-                        Messages
-                    </button>
-                    <button
-                        className={`bottom-nav-item ${activeView === 'wallet' ? 'active' : ''}`}
-                        onClick={() => setActiveView('wallet')}
-                    >
-                        <span>💰</span>
-                        Wallet
-                    </button>
-                    <button
-                        className={`bottom-nav-item ${activeView === 'feed' ? 'active' : ''}`}
-                        onClick={() => setActiveView('feed')}
-                    >
-                        <span>📱</span>
-                        Feed
-                    </button>
-                    <button
-                        className={`bottom-nav-item ${activeView === 'blockchain' ? 'active' : ''}`}
-                        onClick={() => setActiveView('blockchain')}
-                    >
-                        <span>⛓️</span>
-                        Chain
-                    </button>
-                </div>
-            )}
-        </div>
+        </Layout>
     );
 }
 

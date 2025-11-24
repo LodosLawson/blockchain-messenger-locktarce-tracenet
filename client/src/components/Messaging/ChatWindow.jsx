@@ -68,36 +68,48 @@ function ChatWindow({ currentUser, otherUser, token, ws, isMobile }) {
     };
 
     return (
-        <div className="chat-window">
+        <div className="chat-window flex flex-col h-full relative">
             {!isMobile && (
-                <div className="chat-header glass">
+                <div className="chat-header glass-panel p-md flex items-center gap-md z-10">
                     <div className="user-avatar">{otherUser.username[0].toUpperCase()}</div>
                     <div>
-                        <h3 className="font-semibold">{otherUser.username}</h3>
-                        <p className="text-xs text-muted">Online</p>
+                        <h3 className="font-semibold text-lg">{otherUser.username}</h3>
+                        <div className="flex items-center gap-xs">
+                            <span className="w-2 h-2 rounded-full bg-success"></span>
+                            <p className="text-xs text-muted">Online</p>
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className="messages-container">
+            <div className="messages-container flex-1 overflow-y-auto p-md flex flex-col gap-sm">
                 {messages.length === 0 ? (
-                    <div className="empty-messages">
-                        <p className="text-muted">No messages yet. Start the conversation!</p>
+                    <div className="empty-messages flex items-center justify-center h-full">
+                        <div className="text-center p-lg glass-panel rounded-xl">
+                            <span className="text-2xl mb-sm block">👋</span>
+                            <p className="text-muted">No messages yet. Start the conversation!</p>
+                        </div>
                     </div>
                 ) : (
                     messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`message ${msg.from === currentUser.publicKey ? 'sent' : 'received'}`}
+                            className={`message flex ${msg.from === currentUser.publicKey ? 'justify-end' : 'justify-start'} slide-in`}
+                            style={{ animationDelay: `${index * 20}ms` }}
                         >
-                            <div className="message-bubble">
-                                <p>{msg.message}</p>
-                                <div className="message-meta">
-                                    <span className="text-xs">
-                                        {new Date(msg.timestamp).toLocaleTimeString()}
+                            <div
+                                className={`message-bubble p-md rounded-xl max-w-[80%] ${msg.from === currentUser.publicKey
+                                        ? 'bg-accent-primary text-white rounded-tr-none'
+                                        : 'bg-tertiary text-primary rounded-tl-none glass-panel'
+                                    }`}
+                            >
+                                <p className="text-sm leading-relaxed">{msg.message}</p>
+                                <div className="message-meta flex items-center justify-end gap-xs mt-xs opacity-70">
+                                    <span className="text-[10px]">
+                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                     {msg.validated && (
-                                        <span className="badge badge-success">✓ Validated</span>
+                                        <span className="text-[10px]">✓</span>
                                     )}
                                 </div>
                             </div>
@@ -107,17 +119,25 @@ function ChatWindow({ currentUser, otherUser, token, ws, isMobile }) {
                 <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSend} className="message-input-container">
+            <form onSubmit={handleSend} className="message-input-container p-md glass-panel border-t border-border-color flex gap-sm sticky bottom-0 z-20">
                 <input
                     type="text"
-                    className="input message-input"
+                    className="input flex-1"
                     placeholder="Type a message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     disabled={sending}
                 />
-                <button type="submit" className="btn btn-primary" disabled={sending || !newMessage.trim()}>
-                    {sending ? 'Sending...' : 'Send'}
+                <button
+                    type="submit"
+                    className="btn btn-primary w-12 h-12 rounded-full flex items-center justify-center p-0 flex-shrink-0"
+                    disabled={sending || !newMessage.trim()}
+                >
+                    {sending ? (
+                        <span className="animate-spin">↻</span>
+                    ) : (
+                        <span>➤</span>
+                    )}
                 </button>
             </form>
         </div>

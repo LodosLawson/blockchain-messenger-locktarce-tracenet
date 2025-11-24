@@ -52,64 +52,57 @@ function WalletView({ balance, token }) {
     };
 
     return (
-        <div className="wallet-view">
-            <div className="wallet-header glass">
-                <h2 className="wallet-title">Your Wallet</h2>
-                <div className="balance-card">
-                    <p className="text-sm text-muted">Total Balance</p>
-                    <h1 className="balance-amount">{balance.toFixed(2)} <span className="text-sm">LTC</span></h1>
+        <div className="wallet-view fade-in">
+            <div className="wallet-header glass-panel">
+                <h2 className="wallet-title text-xl font-bold">Your Wallet</h2>
+                <div className="balance-card mt-md">
+                    <p className="text-sm text-muted font-medium">Total Balance</p>
+                    <h1 className="balance-amount text-2xl font-bold mt-sm">{balance.toFixed(2)} <span className="text-sm text-accent">LTC</span></h1>
                     {currentPrice > 0 && (
-                        <p className="text-sm text-success mt-sm">
+                        <p className="text-sm text-success mt-xs font-medium">
                             ≈ ${(balance * currentPrice).toFixed(2)} USD
                         </p>
                     )}
                 </div>
             </div>
 
-            <div className="transactions-section">
-                <h3 className="section-title">Transaction History</h3>
+            <div className="transactions-section mt-lg">
+                <h3 className="section-title text-lg font-semibold mb-md">Transaction History</h3>
 
                 {loading ? (
-                    <div className="loading-state">
-                        <p className="text-muted">Loading transactions...</p>
+                    <div className="loading-state flex justify-center p-lg">
+                        <div className="pulse text-muted">Loading transactions...</div>
                     </div>
                 ) : transactions.length === 0 ? (
-                    <div className="empty-state">
+                    <div className="empty-state text-center p-lg glass-panel rounded-lg">
                         <p className="text-muted">No transactions yet</p>
                     </div>
                 ) : (
-                    <div className="transactions-list">
+                    <div className="transactions-list flex flex-col gap-md">
                         {transactions.map((tx, index) => {
                             const txType = getTransactionType(tx);
                             return (
-                                <div key={index} className="transaction-item card">
-                                    <div className="transaction-info">
-                                        <div className="flex items-center gap-md">
-                                            <span className={`badge badge-${txType.color}`}>
-                                                {txType.label}
-                                            </span>
-                                            <div>
-                                                <p className="font-semibold">
-                                                    {tx.type === 'reward'
-                                                        ? `${tx.data?.reason === 'mining' ? 'Mining' : 'Validation'} Reward`
-                                                        : tx.type === 'message'
-                                                            ? 'Message Transaction'
-                                                            : 'Transfer'}
-                                                </p>
-                                                <p className="text-xs text-muted">
-                                                    {new Date(tx.timestamp).toLocaleString()}
-                                                </p>
-                                            </div>
+                                <div key={index} className="transaction-item card flex justify-between items-center slide-in" style={{ animationDelay: `${index * 50}ms` }}>
+                                    <div className="transaction-info flex items-center gap-md">
+                                        <div className={`badge badge-${txType.color}`}>
+                                            {txType.label}
                                         </div>
-                                        <div className={`transaction-amount ${tx.amount > 0 ? 'positive' : 'negative'}`}>
-                                            {tx.amount > 0 ? '+' : ''}{tx.amount.toFixed(2)} LTC
+                                        <div>
+                                            <p className="font-semibold text-sm">
+                                                {tx.type === 'reward'
+                                                    ? `${tx.data?.reason === 'mining' ? 'Mining' : 'Validation'} Reward`
+                                                    : tx.type === 'message'
+                                                        ? 'Message Fee'
+                                                        : 'Transfer'}
+                                            </p>
+                                            <p className="text-xs text-muted">
+                                                {new Date(tx.timestamp).toLocaleString()}
+                                            </p>
                                         </div>
                                     </div>
-                                    {tx.data?.validatedCount && (
-                                        <p className="text-xs text-muted mt-sm">
-                                            Validated {tx.data.validatedCount} transactions
-                                        </p>
-                                    )}
+                                    <div className={`transaction-amount font-bold ${tx.amount > 0 ? 'text-success' : 'text-muted'}`}>
+                                        {tx.amount > 0 ? '+' : ''}{tx.amount.toFixed(2)} LTC
+                                    </div>
                                 </div>
                             );
                         })}
