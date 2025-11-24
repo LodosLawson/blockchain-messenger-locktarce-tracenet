@@ -13,33 +13,6 @@ import userRoutes from './routes/users.js';
 import messageRoutes, { initializeMessagesRouter } from './routes/messages.js';
 import walletRoutes, { initializeWalletRouter } from './routes/wallet.js';
 import validationRoutes, { initializeValidationRouter } from './routes/validation.js';
-import tokenomicsRoutes, { initializeTokenomicsRouter } from './routes/tokenomics.js';
-import blockchainRoutes, { initializeBlockchainRouter } from './routes/blockchain.js';
-import jwt from 'jsonwebtoken';
-import { getUserById } from './database/db.js';
-import { loadBlockchain, saveBlockchain, verifyBlockchainIntegrity } from './utils/blockchainPersistence.js';
-import P2PService from './network/P2PService.js';
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = 'your-secret-key-change-in-production';
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Initialize blockchain and tokenomics system
-const blockchain = new Blockchain();
-
-// Initialize P2P Service
-const p2pService = new P2PService(blockchain);
-const P2P_PORT = process.env.P2P_PORT || 6001;
-p2pService.listen(P2P_PORT);
-
-// Set up broadcasting
-blockchain.onTransactionAdded = (tx) => p2pService.broadcastTransaction(tx);
-blockchain.onBlockMined = (block) => p2pService.broadcastBlock(block);
-
 // Load blockchain from disk if exists
 const savedData = loadBlockchain();
 if (savedData) {
