@@ -216,19 +216,6 @@ initializeMessagesRouter(blockchain, validatorPool, activityTracker, wss);
 initializeWalletRouter(blockchain);
 initializeValidationRouter(validatorPool, activityTracker);
 initializeTokenomicsRouter(feeManager, blockchain, marketCapTracker);
-initializeBlockchainRouter(blockchain, validatorPool);
-
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/messages', messageRoutes);
-blockchain.minePendingTransactions('SYSTEM_MINING_REWARD', validatorRewards);
-
-// Save blockchain to disk
-saveBlockchain(blockchain);
-
-console.log(`⛏️  Block mined! Pending transactions: ${blockchain.pendingTransactions.length}`);
-
 // Update market cap tracker
 marketCapTracker.onTransaction();
 
