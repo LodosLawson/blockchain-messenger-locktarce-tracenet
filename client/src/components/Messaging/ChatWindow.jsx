@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './ChatWindow.css';
 
-function ChatWindow({ currentUser, otherUser, token, ws }) {
+function ChatWindow({ currentUser, otherUser, token, ws, isMobile }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [sending, setSending] = useState(false);
@@ -69,13 +69,15 @@ function ChatWindow({ currentUser, otherUser, token, ws }) {
 
     return (
         <div className="chat-window">
-            <div className="chat-header glass">
-                <div className="user-avatar">{otherUser.username[0].toUpperCase()}</div>
-                <div>
-                    <h3 className="font-semibold">{otherUser.username}</h3>
-                    <p className="text-xs text-muted">Online</p>
+            {!isMobile && (
+                <div className="chat-header glass">
+                    <div className="user-avatar">{otherUser.username[0].toUpperCase()}</div>
+                    <div>
+                        <h3 className="font-semibold">{otherUser.username}</h3>
+                        <p className="text-xs text-muted">Online</p>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="messages-container">
                 {messages.length === 0 ? (
