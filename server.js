@@ -4,8 +4,91 @@ import { WebSocketServer } from 'ws';
 import Blockchain from './blockchain/Blockchain.js';
 import Transaction from './blockchain/Transaction.js';
 import ValidatorPool from './validation/ValidatorPool.js';
-console.log('⏰ Periodic auto-save triggered');
-saveBlockchain(blockchain);
+import ActivityTracker from './validation/ActivityTracker.js';
+import FeeManager from './tokenomics/FeeManager.js';
+import RandomRewardDistributor from './tokenomics/RandomRewardDistributor.js';
+import MarketCapTracker from './tokenomics/MarketCapTracker.js';
+import authRoutes, { initializeAuthRouter } from './routes/auth.js';
+import userRoutes from './routes/users.js';
+import messageRoutes, { initializeMessagesRouter } from './routes/messages.js';
+import walletRoutes, { initializeWalletRouter } from './routes/wallet.js';
+import validationRoutes, { initializeValidationRouter } from './routes/validation.js';
+import tokenomicsRoutes, { initializeTokenomicsRouter } from './routes/tokenomics.js';
+import blockchainRoutes, { initializeBlockchainRouter } from './routes/blockchain.js';
+import jwt from 'jsonwebtoken';
+import { getUserById } from './database/db.js';
+import { loadBlockchain, saveBlockchain, verifyBlockchainIntegrity } from './utils/blockchainPersistence.js';
+import P2PService from './network/P2PService.js';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = 'your-secret-key-change-in-production';
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Health check endpoint for Cloud Run
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'healthy' });
+});
+
+// Initialize blockchain and tokenomics system
+const blockchain = new Blockchain();
+
+// Initialize P2P Service
+const p2pService = new P2PService(blockchain);
+// const P2P_PORT = process.env.P2P_PORT || 6001;
+// try {
+//     p2pService.listen(P2P_PORT);
+// } catch (error) {
+//     console.warn(`⚠️ Failed to start P2P service on port ${P2P_PORT}:`, error.message);
+// }
+
+// Set up broadcasting
+blockchain.onTransactionAdded = (tx) => p2pService.broadcastTransaction(tx);
+blockchain.onBlockMined = (block) => p2pService.broadcastBlock(block);
+
+// Load blockchain from disk if exists
+const savedData = loadBlockchain();
+if (savedData) {
+    blockchain.loadFromData(savedData);
+    verifyBlockchainIntegrity(blockchain);
+}
+
+const randomDistributor = new RandomRewardDistributor();
+const feeManager = new FeeManager(blockchain, randomDistributor);
+const marketCapTracker = new MarketCapTracker(blockchain);
+const validatorPool = new ValidatorPool(blockchain);
+const activityTracker = new ActivityTracker(validatorPool);
+
+// Start cleanup interval
+activityTracker.startCleanupInterval();
+
+// Track new user registrations for initial bonus
+const pendingBonuses = new Map(); // userId -> publicKey
+
+console.log('🚀 Starting server initialization...');
+
+// Create HTTP server
+const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+    console.log(`⛓️  Blockchain initialized`);
+    console.log(`💰 Max Supply: ${blockchain.MAX_SUPPLY.toLocaleString()} coins`);
+    console.log(`🎁 Initial Bonus: ${blockchain.INITIAL_USER_BONUS} coins`);
+    console.log(`📊 Market Cap: $${marketCapTracker.getMarketCap()}`);
+    console.log(`✅ Validator pool ready`);
+    // console.log(`📡 P2P Service active on port ${P2P_PORT}`);
+
+    // Initial save
+    saveBlockchain(blockchain);
+});
+
+// Periodic auto-save every 5 minutes
+const AUTO_SAVE_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const autoSaveTimer = setInterval(() => {
+    console.log('⏰ Periodic auto-save triggered');
+    saveBlockchain(blockchain);
 }, AUTO_SAVE_INTERVAL);
 
 // Graceful shutdown handler
