@@ -26,6 +26,7 @@
     border-radius: var(--radius-xl);
     position: relative;
     z-index: 1;
+    margin: var(--spacing-md);
 }
 
 .auth-header {
@@ -84,4 +85,17 @@
 
 .auth-link:hover {
     color: var(--accent-secondary);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-sm);
+        border-radius: var(--radius-lg);
+    }
+
+    .auth-title {
+        font-size: 1.75rem;
+    }
 }

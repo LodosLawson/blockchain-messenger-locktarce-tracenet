@@ -14,7 +14,14 @@ function App() {
     useEffect(() => {
         if (token && user) {
             // Connect to WebSocket
-            const websocket = new WebSocket('ws://localhost:3000');
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = window.location.host;
+            // In development, we might be on port 5173 but backend is 3000
+            const wsUrl = process.env.NODE_ENV === 'development'
+                ? 'ws://localhost:3000'
+                : `${protocol}//${host}`;
+
+            const websocket = new WebSocket(wsUrl);
 
             websocket.onopen = () => {
                 console.log('WebSocket connected');
