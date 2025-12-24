@@ -29,6 +29,7 @@ import walletRouter, { initializeWalletRouter } from './routes/wallet.js';
 import validationRouter, { initializeValidationRouter } from './routes/validation.js';
 import tokenomicsRouter, { initializeTokenomicsRouter } from './routes/tokenomics.js';
 import blockchainRouter, { initializeBlockchainRouter } from './routes/blockchain.js';
+import socialRouter, { initializeSocialRouter } from './routes/social.js';
 
 // Load environment variables
 dotenv.config();
@@ -287,6 +288,7 @@ initializeWalletRouter(blockchain);
 initializeValidationRouter(validatorPool, activityTracker);
 initializeTokenomicsRouter(feeManager, blockchain, marketCapTracker);
 initializeBlockchainRouter(blockchain, validatorPool);
+initializeSocialRouter(blockchain);
 
 // Update market cap tracker
 marketCapTracker.onTransaction();
@@ -298,6 +300,7 @@ app.use('/api/wallet', walletRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/tokenomics', tokenomicsRouter);
 app.use('/api/blockchain', blockchainRouter);
+app.use('/api/social', socialRouter);
 
 // Health check endpoint for Cloud Run
 app.get('/health', (req, res) => {

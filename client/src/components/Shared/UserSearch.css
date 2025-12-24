@@ -1,0 +1,20 @@
+.user-search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-results {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.search-result-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
