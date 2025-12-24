@@ -1,12 +1,13 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { createUser, getUserByUsername } from '../database/db.js';
 import Transaction from '../blockchain/Transaction.js';
 import { saveBlockchain } from '../utils/blockchainPersistence.js';
 
 const router = express.Router();
-const JWT_SECRET = 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Will be initialized by server
 let blockchain, marketCapTracker;
@@ -19,10 +20,10 @@ export const initializeAuthRouter = (bc, mct) => {
 // Register
 router.post('/register', async (req, res) => {
     try {
-        const { username, password, publicKey } = req.body;
+        const { username, password } = req.body;
 
-        if (!username || !password || !publicKey) {
-            return res.status(400).json({ error: 'Username, password, and public key required' });
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Username and password required' });
         }
 
         // Check if user exists
@@ -39,8 +40,21 @@ router.post('/register', async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user (store public key, no private key on server)
-        const userId = createUser(username, hashedPassword, publicKey);
+        // Generate RSA Key Pair
+        const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+            modulusLength: 2048,
+            publicKeyEncoding: {
+                type: 'pkcs1',
+                format: 'pem'
+            },
+            privateKeyEncoding: {
+                type: 'pkcs1',
+                format: 'pem'
+            }
+        });
+
+        // Create user with keys
+        const userId = createUser(username, hashedPassword, publicKey, privateKey);
 
         // Give initial bonus and mine a block immediately
         if (blockchain) {
@@ -60,9 +74,11 @@ router.post('/register', async (req, res) => {
             // Save blockchain to disk
             saveBlockchain(blockchain);
 
-            marketCapTracker.onUserJoin(blockchain.INITIAL_USER_BONUS);
+            if (marketCapTracker) {
+                marketCapTracker.onUserJoin(blockchain.INITIAL_USER_BONUS);
+            }
 
-            console.log(`💰 Initial bonus of ${blockchain.INITIAL_USER_BONUS} coins given to ${username} and saved to blockchain`);
+            console.log(`💰 Initial bonus of ${blockchain.INITIAL_USER_BONUS} coins given to ${username}`);
         }
 
         // Generate token

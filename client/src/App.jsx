@@ -1,104 +1,113 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { api, createWebSocket } from './api/client';
 
-// Lazy load components
-const Login = lazy(() => import('./components/Auth/Login'));
-const Register = lazy(() => import('./components/Auth/Register'));
-const Dashboard = lazy(() => import('./components/Dashboard/Dashboard'));
+// Pages
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Wallet from './pages/Wallet';
+import Messages from './pages/Messages';
+import BlockchainExplorer from './pages/BlockchainExplorer';
 
-// Loading component
-const Loading = () => (
-  <div className="flex items-center justify-center h-full w-full" style={{ minHeight: '100vh' }}>
-    <div className="text-center">
-      <div className="pulse text-xl font-bold mb-sm">Loading...</div>
-    </div>
-  </div>
-);
+// Components
+import Layout from './components/Layout';
+import LoadingScreen from './components/LoadingScreen';
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || 'null'));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
-    if (token && !ws) {
-      // Connect to WebSocket
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = process.env.NODE_ENV === 'development'
-        ? 'localhost:3000'
-        : window.location.host;
+    // Check for existing token
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
 
-      const socket = new WebSocket(`${protocol}//${host}`);
+    if (token && savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsAuthenticated(true);
 
-      socket.onopen = () => {
-        console.log('Connected to WebSocket');
-        // Authenticate socket
-        socket.send(JSON.stringify({
-          type: 'auth',
-          token
-        }));
-      };
-
-      socket.onclose = () => {
-        console.log('Disconnected from WebSocket');
-        setWs(null);
-      };
-
+      // Connect WebSocket
+      const socket = createWebSocket(token);
       setWs(socket);
 
-      return () => {
-        socket.close();
-      };
+      // Cleanup on unmount
+      return () => socket?.close();
     }
-  }, [token]);
 
-  const handleLogin = (newToken, newUser) => {
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
+    setLoading(false);
+  }, []);
+
+  const handleLogin = (token, userData) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    setIsAuthenticated(true);
+
+    // Connect WebSocket
+    const socket = createWebSocket(token);
+    setWs(socket);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setToken(null);
     setUser(null);
+    setIsAuthenticated(false);
+
+    // Close WebSocket
     if (ws) {
       ws.close();
       setWs(null);
     }
   };
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   return (
-    <Suspense fallback={<Loading />}>
-      <Routes>
-        <Route
-          path="/login"
-          element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
-        />
-        <Route
-          path="/register"
-          element={!token ? <Register onRegister={handleLogin} /> : <Navigate to="/dashboard" />}
-        />
-        <Route
-          path="/dashboard"
-          element={
-            token ? (
-              <Dashboard
-                user={user}
-                token={token}
-                ws={ws}
-                onLogout={handleLogout}
-              />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} />} />
-      </Routes>
-    </Suspense>
+    <Routes>
+      {/* Public Routes */}
+      <Route
+        path="/login"
+        element={
+          !isAuthenticated ?
+            <Login onLogin={handleLogin} /> :
+            <Navigate to="/dashboard" replace />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          !isAuthenticated ?
+            <Register onRegister={handleLogin} /> :
+            <Navigate to="/dashboard" replace />
+        }
+      />
+
+      {/* Protected Routes */}
+      <Route
+        path="/*"
+        element={
+          isAuthenticated ? (
+            <Layout user={user} onLogout={handleLogout}>
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard user={user} ws={ws} />} />
+                <Route path="/wallet" element={<Wallet user={user} ws={ws} />} />
+                <Route path="/messages" element={<Messages user={user} ws={ws} />} />
+                <Route path="/explorer" element={<BlockchainExplorer />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+    </Routes>
   );
 }
 

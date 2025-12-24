@@ -63,4 +63,21 @@ router.get('/validators/online', (req, res) => {
     res.json({ validators });
 });
 
+// Mine pending transactions (for testing/demo)
+router.post('/mine', (req, res) => {
+    if (!blockchain) return res.status(503).json({ error: 'Blockchain not initialized' });
+
+    try {
+        blockchain.minePendingTransactions(blockchain.systemWallet, []);
+        res.json({
+            success: true,
+            message: 'Block mined successfully',
+            blockIndex: blockchain.chain.length - 1
+        });
+    } catch (error) {
+        console.error('Mining error:', error);
+        res.status(500).json({ error: 'Mining failed' });
+    }
+});
+
 export default router;

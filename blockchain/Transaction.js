@@ -31,7 +31,11 @@ class Transaction {
     }
 
     signTransaction(signingKey) {
-        if (signingKey.export({ type: 'pkcs1', format: 'pem' }).toString() !== this.fromAddress) {
+        // Derive public key from the private signing key to verify ownership
+        const publicKey = crypto.createPublicKey(signingKey);
+        const publicKeyString = publicKey.export({ type: 'pkcs1', format: 'pem' });
+
+        if (publicKeyString !== this.fromAddress) {
             throw new Error('You cannot sign transactions for other wallets!');
         }
 
