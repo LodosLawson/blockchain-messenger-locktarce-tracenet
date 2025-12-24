@@ -57,7 +57,9 @@ router.post('/register', async (req, res) => {
         const userId = createUser(username, hashedPassword, publicKey, privateKey);
 
         // Give initial bonus and mine a block immediately
+        // Give initial bonus and mine a block immediately
         if (blockchain) {
+            console.log(`Creating initial bonus transaction for ${username}...`);
             const bonusTx = new Transaction(
                 null,
                 publicKey,
@@ -66,19 +68,31 @@ router.post('/register', async (req, res) => {
                 { reason: 'initial_bonus', username }
             );
 
-            blockchain.addTransaction(bonusTx);
+            try {
+                console.log('Adding bonus transaction to pool...');
+                blockchain.addTransaction(bonusTx);
 
-            // Mine a block immediately to save the bonus transaction to the blockchain
-            blockchain.minePendingTransactions(blockchain.systemWallet, []);
+                console.log('Mining block for initial bonus...');
+                // Mine a block immediately to save the bonus transaction to the blockchain
+                blockchain.minePendingTransactions(blockchain.systemWallet, []);
 
-            // Save blockchain to disk
-            saveBlockchain(blockchain);
+                console.log(`Block mined. Chain length: ${blockchain.chain.length}`);
 
-            if (marketCapTracker) {
-                marketCapTracker.onUserJoin(blockchain.INITIAL_USER_BONUS);
+                // Save blockchain to disk
+                console.log('Saving blockchain to disk...');
+                saveBlockchain(blockchain);
+
+                if (marketCapTracker) {
+                    marketCapTracker.onUserJoin(blockchain.INITIAL_USER_BONUS);
+                }
+
+                console.log(`💰 Initial bonus of ${blockchain.INITIAL_USER_BONUS} coins given to ${username}`);
+            } catch (minError) {
+                console.error('FAILED to mine initial bonus block:', minError);
+                // We don't fail the registration, but we log the error
             }
-
-            console.log(`💰 Initial bonus of ${blockchain.INITIAL_USER_BONUS} coins given to ${username}`);
+        } else {
+            console.error('CRITICAL: Blockchain instance is NOT defined in auth router during register!');
         }
 
         // Generate token
